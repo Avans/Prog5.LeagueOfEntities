@@ -1,0 +1,185 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="LeagueOfEntitiesModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="__RefactorLog">
+          <Key>
+            <PropertyRef Name="OperationKey" />
+          </Key>
+          <Property Name="OperationKey" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Competition">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Date" Type="date" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="52" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CompetitionTeam">
+          <Key>
+            <PropertyRef Name="CompetitionId" />
+            <PropertyRef Name="TeamId" />
+          </Key>
+          <Property Name="CompetitionId" Type="int" Nullable="false" />
+          <Property Name="TeamId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Team">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="52" Nullable="false" />
+          <Property Name="Ranking" Type="int" Nullable="false" />
+          <Property Name="Country" Type="nvarchar" MaxLength="52" />
+          <Property Name="LogoURL" Type="nvarchar" MaxLength="128" />
+        </EntityType>
+        <Association Name="FK_CompetitionTeam_Competition">
+          <End Role="Competition" Type="Self.Competition" Multiplicity="1" />
+          <End Role="CompetitionTeam" Type="Self.CompetitionTeam" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Competition">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CompetitionTeam">
+              <PropertyRef Name="CompetitionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CompetitionTeam_Team">
+          <End Role="Team" Type="Self.Team" Multiplicity="1" />
+          <End Role="CompetitionTeam" Type="Self.CompetitionTeam" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Team">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CompetitionTeam">
+              <PropertyRef Name="TeamId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="LeagueOfEntitiesModelStoreContainer">
+          <EntitySet Name="__RefactorLog" EntityType="Self.__RefactorLog" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Competition" EntityType="Self.Competition" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CompetitionTeam" EntityType="Self.CompetitionTeam" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Team" EntityType="Self.Team" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_CompetitionTeam_Competition" Association="Self.FK_CompetitionTeam_Competition">
+            <End Role="Competition" EntitySet="Competition" />
+            <End Role="CompetitionTeam" EntitySet="CompetitionTeam" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CompetitionTeam_Team" Association="Self.FK_CompetitionTeam_Team">
+            <End Role="Team" EntitySet="Team" />
+            <End Role="CompetitionTeam" EntitySet="CompetitionTeam" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="LeagueOfEntitiesModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="DatabaseContext" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="C__RefactorLog" EntityType="LeagueOfEntitiesModel.C__RefactorLog" />
+          <EntitySet Name="Competitions" EntityType="LeagueOfEntitiesModel.Competition" />
+          <EntitySet Name="Teams" EntityType="LeagueOfEntitiesModel.Team" />
+          <AssociationSet Name="CompetitionTeam" Association="LeagueOfEntitiesModel.CompetitionTeam">
+            <End Role="Competition" EntitySet="Competitions" />
+            <End Role="Team" EntitySet="Teams" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="C__RefactorLog">
+          <Key>
+            <PropertyRef Name="OperationKey" />
+          </Key>
+          <Property Name="OperationKey" Type="Guid" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Competition">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="52" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Teams" Relationship="LeagueOfEntitiesModel.CompetitionTeam" FromRole="Competition" ToRole="Team" />
+        </EntityType>
+        <EntityType Name="Team">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="52" FixedLength="false" Unicode="true" />
+          <Property Name="Ranking" Type="Int32" Nullable="false" />
+          <Property Name="Country" Type="String" MaxLength="52" FixedLength="false" Unicode="true" />
+          <Property Name="LogoURL" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Competitions" Relationship="LeagueOfEntitiesModel.CompetitionTeam" FromRole="Team" ToRole="Competition" />
+        </EntityType>
+        <Association Name="CompetitionTeam">
+          <End Type="LeagueOfEntitiesModel.Competition" Role="Competition" Multiplicity="*" />
+          <End Type="LeagueOfEntitiesModel.Team" Role="Team" Multiplicity="*" />
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="LeagueOfEntitiesModelStoreContainer" CdmEntityContainer="DatabaseContext">
+          <EntitySetMapping Name="C__RefactorLog">
+            <EntityTypeMapping TypeName="LeagueOfEntitiesModel.C__RefactorLog">
+              <MappingFragment StoreEntitySet="__RefactorLog">
+                <ScalarProperty Name="OperationKey" ColumnName="OperationKey" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Competitions">
+            <EntityTypeMapping TypeName="LeagueOfEntitiesModel.Competition">
+              <MappingFragment StoreEntitySet="Competition">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Teams">
+            <EntityTypeMapping TypeName="LeagueOfEntitiesModel.Team">
+              <MappingFragment StoreEntitySet="Team">
+                <ScalarProperty Name="LogoURL" ColumnName="LogoURL" />
+                <ScalarProperty Name="Country" ColumnName="Country" />
+                <ScalarProperty Name="Ranking" ColumnName="Ranking" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="CompetitionTeam" TypeName="LeagueOfEntitiesModel.CompetitionTeam" StoreEntitySet="CompetitionTeam">
+            <EndProperty Name="Team">
+              <ScalarProperty Name="Id" ColumnName="TeamId" />
+            </EndProperty>
+            <EndProperty Name="Competition">
+              <ScalarProperty Name="Id" ColumnName="CompetitionId" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
